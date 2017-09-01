@@ -17,6 +17,7 @@ class PreViewController: UIViewController, UICollectionViewDelegate, UICollectio
     var sceneSize: CGSize = CGSize(width: 0, height: 0)
     var searchScreen:Bool = true
     @IBOutlet var ScreenShotCollectionView: UICollectionView!
+    @IBOutlet var DummyCollectionView: UICollectionView!
     @IBOutlet var PageControl: UIPageControl!
     
     
@@ -36,7 +37,8 @@ class PreViewController: UIViewController, UICollectionViewDelegate, UICollectio
         if searchScreen { //레이아웃이 완성되고 한번만 실행되도록
             searchScreen = false
             CheckInset()
-            ScreenShotCollectionView.scrollToItem(at: IndexPath(item: page, section: 0), at: UICollectionViewScrollPosition.centeredHorizontally, animated: false)
+//            ScreenShotCollectionView.scrollToItem(at: IndexPath(item: page, section: 0), at: UICollectionViewScrollPosition.centeredHorizontally, animated: false)
+            DummyCollectionView.scrollToItem(at: IndexPath(item: page, section: 0), at: UICollectionViewScrollPosition.centeredHorizontally, animated: false)
         }
     }
     
@@ -49,29 +51,42 @@ class PreViewController: UIViewController, UICollectionViewDelegate, UICollectio
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let Cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! PreViewCollectionCell
-        let preView: UIImage = (preViewArray[indexPath.row] as? UIImage)!
-        Cell.ScreenShotImage.image = preView
-        Cell.ScreenShotImage.layer.borderColor = UIColor.init(r: 0, g: 0, b: 0, a: 0.3).cgColor
-        Cell.ScreenShotImage.layer.borderWidth = 1/UIScreen.main.scale
-        return Cell
+        
+        if collectionView == ScreenShotCollectionView {
+            let Cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! PreViewCollectionCell
+            let preView: UIImage = (preViewArray[indexPath.row] as? UIImage)!
+            Cell.ScreenShotImage.image = preView
+            Cell.ScreenShotImage.layer.borderColor = UIColor.init(r: 0, g: 0, b: 0, a: 0.3).cgColor
+            Cell.ScreenShotImage.layer.borderWidth = 1/UIScreen.main.scale
+            return Cell
+        }else{
+            let DummyCell = collectionView.dequeueReusableCell(withReuseIdentifier: "DummyCell", for: indexPath) as! DummyCollectionCell
+            return DummyCell
+        }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let Cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! PreViewCollectionCell
-        Cell.ScreenShotImage.image = nil
+        if collectionView == ScreenShotCollectionView {
+            let Cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! PreViewCollectionCell
+            Cell.ScreenShotImage.image = nil
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let newHeight = self.view.frame.height -  64 - 32 - 32
-        var newWidth = self.view.frame.width
-        
-        if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
-            let ratio: CGFloat = newHeight / 440 // newHeight, originalWidth
-            newWidth = 248 * ratio
+        if collectionView == ScreenShotCollectionView {
+            let newHeight = self.view.frame.height -  64 - 32 - 32
+            var newWidth = self.view.frame.width
+            
+            if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
+                let ratio: CGFloat = newHeight / 440 // newHeight, originalWidth
+                newWidth = 248 * ratio
+            }
+            
+            return CGSize(width: newWidth, height: newHeight)
+        }else{
+            return collectionView.frame.size
         }
-        
-        return CGSize(width: newWidth, height: newHeight)
     }
     
     override func willRotate(to toInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval) {
@@ -86,11 +101,22 @@ class PreViewController: UIViewController, UICollectionViewDelegate, UICollectio
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        page = Int(round(scrollView.contentOffset.x / scrollView.frame.size.width))
-        PageControl.currentPage = page
-        
+        if scrollView == DummyCollectionView {
+            page = Int(round(scrollView.contentOffset.x / scrollView.frame.size.width))
+            PageControl.currentPage = page
+        }
     }
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == DummyCollectionView {
+//            let f  = 0.0004468085 * (self.view.frame.width - 320) + 0.83
+            let f  = (0.042/94.0) * (self.view.frame.width - 320) + 0.83
+            let horizontalScrollPosition = scrollView.contentOffset.x * f
+            self.ScreenShotCollectionView.delegate = nil
+            self.ScreenShotCollectionView.contentOffset = CGPoint(x: horizontalScrollPosition, y: 0)
+            self.ScreenShotCollectionView.delegate = self
+        }
+    }
     
     func CheckInset() {
         let collectionViewLayout = ScreenShotCollectionView.collectionViewLayout as? UICollectionViewFlowLayout
@@ -114,3 +140,9 @@ class PreViewController: UIViewController, UICollectionViewDelegate, UICollectio
 class PreViewCollectionCell: UICollectionViewCell {
     @IBOutlet var ScreenShotImage: UIImageView!
 }
+
+class DummyCollectionCell: UICollectionViewCell {
+    @IBOutlet var DummyLabel: UILabel!
+}
+
+

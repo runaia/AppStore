@@ -22,7 +22,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // MARK: Code
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         let url = URL(string: "https://itunes.apple.com/kr/rss/topfreeapplications/limit=50/genre=6015/json")
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         URLSession.shared.dataTask(with: url!, completionHandler: {
@@ -35,7 +34,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     if let feed = (json!.object(forKey: "feed") as! NSDictionary)["entry"]as? NSArray{
                             for i in feed {
                                 if let item = i as? NSDictionary {
-                                    let urlString: String = ((item["im:image"] as! NSArray)[1] as! NSDictionary)["label"] as! String
+                                    var urlString: String = ""
+                                    if UIScreen.main.scale ==  1.0 {
+                                        urlString = ((item["im:image"] as! NSArray)[0] as! NSDictionary)["label"] as! String
+                                    }else if UIScreen.main.scale ==  2.0 {
+                                        urlString = ((item["im:image"] as! NSArray)[1] as! NSDictionary)["label"] as! String
+                                    }else {
+                                        urlString = ((item["im:image"] as! NSArray)[2] as! NSDictionary)["label"] as! String
+                                    }
+                                    
                                     let title: String = (item["im:name"] as! NSDictionary)["label"] as! String
                                     let category: String = ((item["category"] as! NSDictionary) ["attributes"] as! NSDictionary) ["label"] as! String
                                     let appId: String = ((item["id"] as! NSDictionary)["attributes"] as! NSDictionary)["im:id"] as! String
