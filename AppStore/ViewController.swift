@@ -24,10 +24,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewDidLoad()
         
         let url = URL(string: "https://itunes.apple.com/kr/rss/topfreeapplications/limit=50/genre=6015/json")
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         URLSession.shared.dataTask(with: url!, completionHandler: {
             (data, response, error) in
             if(error != nil){
                 print("error")
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
             }else{
                 if  let json = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? NSDictionary {
                     if let feed = (json!.object(forKey: "feed") as! NSDictionary)["entry"]as? NSArray{
@@ -48,6 +50,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 }
                 print("데이터 다운 :", self.listArray.count, "개")
                 DispatchQueue.main.async {
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
                     self.downloadAppImage()
                 }
             }
@@ -56,6 +59,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func downloadAppImage() {
         print("이미지 다운로드")
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         for i in 0..<(listArray.count) {
             let item = self.listArray[i] as! NSDictionary
             let url = URL(string: item["urlString"] as! String)
@@ -63,11 +67,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 (data, response, error) in
                 if(error != nil){
                     print("error")
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 }else{
                     if let image = UIImage(data: data!) {
                         item.setValue(image, forKey: "image")
                         if i == (self.listArray.count)-1 {//마지막 까지 완료가 되었으면
                             DispatchQueue.main.async {
+                                UIApplication.shared.isNetworkActivityIndicatorVisible = false
                                 self.Indicator.stopAnimating()
                                 self.Indicator.isHidden = true
                                 print("앱 아이콘 다운로드\(self.listArray.count)개 완료")

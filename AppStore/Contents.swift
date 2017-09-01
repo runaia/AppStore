@@ -20,6 +20,7 @@ class Contents: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     var selectScreenShotIndex: Int = 0
     
     
+    @IBOutlet var Indicator: UIActivityIndicatorView!
     @IBOutlet var HiddenLabel: UILabel!
     @IBOutlet var ContentsTableView: UITableView!
     @IBOutlet var AppInfoView: UIView!
@@ -52,11 +53,13 @@ class Contents: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         //넘겨받은 APP 기본정보 출력
         TitleLabel.text = appName
         TitleLabel.autoSize(fontSize: 13.5)
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         let url = URL(string: "https://itunes.apple.com/lookup?id=\(appId)&country=kr")
         URLSession.shared.dataTask(with: url!, completionHandler: {
             (data, response, error) in
             if(error != nil){
                 print("error")
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
             }else{
                 do{
                     let json = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! NSDictionary
@@ -82,6 +85,7 @@ class Contents: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                     self.contentsArray.add(["type" : 6, "contents" : "개발자 앱"] as NSMutableDictionary)
                     
                     DispatchQueue.main.async {
+                        UIApplication.shared.isNetworkActivityIndicatorVisible = false
                         if let track: String = results["trackContentRating"] as? String {
                             self.TrackLabel.text = " \(track) "
                             self.TrackLabel.layer.borderColor = UIColor.init(r: 99, g: 99, b: 99, a: 1.0).cgColor
@@ -101,20 +105,26 @@ class Contents: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     
     func downloadAppImage() {
         print("이미지 다운로드")
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         for i in 0..<(screenShotUrlArray.count) {
             let url = URL(string: screenShotUrlArray[i] as! String)
             URLSession.shared.dataTask(with: url!, completionHandler: {
                 (data, response, error) in
                 if(error != nil){
                     print("error")
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 }else{
                     if let image = UIImage(data: data!) {
                         self.screenShotImageArray.add(image)
                         if i == (self.screenShotUrlArray.count)-1 {//마지막 까지 완료가 되었으면
                             DispatchQueue.main.async {
+                                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                                self.Indicator.stopAnimating()
+                                self.Indicator.isHidden = true
                                 self.ContentsTableView.delegate = self
                                 self.ContentsTableView.dataSource = self
                                 self.ContentsTableView.reloadData()
+                                self.ContentsTableView.isHidden = false
                                 
                                 let border = CALayer()
                                 let borderWidth = 1/UIScreen.main.scale
