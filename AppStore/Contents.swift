@@ -54,6 +54,7 @@ class Contents: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         TitleLabel.text = appName
         TitleLabel.autoSize(fontSize: 13.5)
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        print("[\(appName)] 콘텐츠 데이터 다운로드")
         let url = URL(string: "https://itunes.apple.com/lookup?id=\(appId)&country=kr")
         URLSession.shared.dataTask(with: url!, completionHandler: {
             (data, response, error) in
@@ -70,10 +71,13 @@ class Contents: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                     self.screenShotUrlArray = results["screenshotUrls"] as! NSArray
                     self.contentsArray.add(["type" : 0, "contents" : (results["screenshotUrls"])!, "subTitle" : "iPhone"] as NSMutableDictionary)
                     self.contentsArray.add(["type" : 1, "contents" : (results["description"])!,"subTitle" : "설명", "spread" : false, "spreadMaxHeight" : 0 as CGFloat] as NSMutableDictionary)
-                    self.contentsArray.add(["type" : 2, "contents" : (results["releaseNotes"])!, "updateString": (results["currentVersionReleaseDate"])!, "subTitle" : "새로운 기능", "spread" : false, "spreadMaxHeight" : 0 as CGFloat] as NSMutableDictionary)
                     
-                    //앱정보 type:3
+                    if let releaseNotes: String = results["releaseNotes"] as? String {
+                        self.contentsArray.add(["type" : 2, "contents" : releaseNotes, "updateString": (results["currentVersionReleaseDate"])!, "subTitle" : "새로운 기능", "spread" : false, "spreadMaxHeight" : 0 as CGFloat] as NSMutableDictionary)
+                    }
+                    
                     self.contentsArray.add(["type" : 4, "contents" : "버전 업데이트 기록"] as NSMutableDictionary)
+                    
                     if let siteUrl: String = results["sellerUrl"] as? String {
                         self.contentsArray.add(["type" : 5, "contents" : "개발자 웹사이트", "url" :siteUrl] as NSMutableDictionary)
                     }
@@ -82,7 +86,7 @@ class Contents: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                         self.contentsArray.add(["type" : 5, "contents" : "개인정보 취급방침", "url" :sellerUrl] as NSMutableDictionary) // 개인정보 취급방침 url 데이터 없음
                     }
                     self.contentsArray.add(["type" : 4, "contents" : "개발자 앱"] as NSMutableDictionary)
-                    self.contentsArray.add(["type" : 6, "contents" : "개발자 앱"] as NSMutableDictionary)
+                    self.contentsArray.add(["type" : 6, "contents" : self.copyright] as NSMutableDictionary)
                     
                     DispatchQueue.main.async {
                         UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -104,7 +108,7 @@ class Contents: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
     }
     
     func downloadAppImage() {
-        print("이미지 다운로드")
+        print("[\(appName)] 이미지 \(screenShotUrlArray.count)개 다운로드  시작")
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         for i in 0..<(screenShotUrlArray.count) {
             let url = URL(string: screenShotUrlArray[i] as! String)
@@ -115,9 +119,9 @@ class Contents: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                     UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 }else{
                     if let image = UIImage(data: data!) {
-                        self.screenShotImageArray.add(image)
-                        if i == (self.screenShotUrlArray.count)-1 {//마지막 까지 완료가 되었으면
-                            DispatchQueue.main.async {
+                        DispatchQueue.main.async {
+                            self.screenShotImageArray.add(image)
+                            if self.screenShotImageArray.count == self.screenShotUrlArray.count {//마지막 까지 완료가 되었으면
                                 UIApplication.shared.isNetworkActivityIndicatorVisible = false
                                 self.Indicator.stopAnimating()
                                 self.Indicator.isHidden = true
@@ -126,6 +130,8 @@ class Contents: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                                 self.ContentsTableView.reloadData()
                                 self.ContentsTableView.isHidden = false
                                 
+                                print("[\(self.appName)] 스크린샷 \(self.screenShotImageArray.count)개 다운로드 완료\n")
+                                
                                 let border = CALayer()
                                 let borderWidth = 1/UIScreen.main.scale
                                 border.frame = CGRect.init(x: 0, y: 50 - borderWidth, width: self.view.frame.width, height: borderWidth)
@@ -133,6 +139,8 @@ class Contents: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                                 self.SegCell.layer.addSublayer(border)
                             }
                         }
+                    }else{
+                        print("스크린샷 다운로드 실패")
                     }
                 }
             }).resume()
@@ -154,9 +162,23 @@ class Contents: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         return (contentsArray.count)
     }
     
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let dic: NSMutableDictionary = contentsArray[indexPath.row] as! NSMutableDictionary
+        let type: Int = dic["type"] as! Int
+        if type == 0 { //스크린샷
+            return 410
+            
+        }else if type == 4 || type == 5 { //URL 메뉴
+            return 50
+            
+        }else if type == 6 { //copyright
+            return 45
+            
+        }else{
+            return UITableViewAutomaticDimension
+        }
     }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let dic: NSMutableDictionary = contentsArray[indexPath.row] as! NSMutableDictionary
@@ -171,7 +193,29 @@ class Contents: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
                 return cell
             }
             
-        }else if type == 1 || type == 2{ //앱 소개
+        }else if type == 3 { //앱 정보
+            let cell = tableView.dequeueReusableCell(withIdentifier: "AppInfo", for: indexPath ) as! ContentsTableCell
+            return cell
+            
+        }else if type == 4 { //디테일 메뉴
+            let cell = tableView.dequeueReusableCell(withIdentifier: "DetailMenu", for: indexPath ) as! ContentsTableCell
+            let str: String = dic["contents"] as! String
+            cell.ContentsLabel.text = str
+            return cell
+            
+        }else if type == 5 { //URL 메뉴
+            let cell = tableView.dequeueReusableCell(withIdentifier: "UrlMenu", for: indexPath ) as! ContentsTableCell
+            let str: String = dic["contents"] as! String
+            cell.ContentsLabel.text = str
+            return cell
+            
+        }else if type == 6 { //copyright
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Copyright", for: indexPath ) as! ContentsTableCell
+            let str: String = dic["contents"] as! String
+            cell.ContentsLabel.text = str
+            return cell
+            
+        }else{//앱 소개
             let cell = tableView.dequeueReusableCell(withIdentifier: "Text", for: indexPath ) as! ContentsTableCell
             var contents: String = ""
             if let update: String = dic["updateString"] as? String {
@@ -190,28 +234,6 @@ class Contents: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
             let subTitle: String = dic["subTitle"] as! String
             cell.ContentsSubTitleLabel.text = subTitle
             return cell
-            
-        }else if type == 3 { //앱 정보
-            let cell = tableView.dequeueReusableCell(withIdentifier: "AppInfo", for: indexPath ) as! ContentsTableCell
-            return cell
-            
-        }else if type == 4 { //디테일 메뉴
-            let cell = tableView.dequeueReusableCell(withIdentifier: "DetailMenu", for: indexPath ) as! ContentsTableCell
-            let str: String = dic["contents"] as! String
-            cell.ContentsLabel.text = str
-            return cell
-            
-        }else if type == 5 { //URL 메뉴
-            let cell = tableView.dequeueReusableCell(withIdentifier: "UrlMenu", for: indexPath ) as! ContentsTableCell
-            let str: String = dic["contents"] as! String
-            cell.ContentsLabel.text = str
-            return cell
-            
-        }else{
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Copyright", for: indexPath ) as! ContentsTableCell
-            cell.ContentsLabel.text = copyright
-            return cell
-            
         }
     }
     
@@ -261,10 +283,6 @@ class Contents: UIViewController, UITableViewDelegate, UITableViewDataSource, UI
         return Cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let Cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! ScreenShotCollection
-        Cell.ScreenShotImageButton.setImage(nil, for: .normal)
-    }
     
     @IBAction func SelectScreenShotEvent(_ sender: UIButton) {
         selectScreenShotIndex = sender.tag

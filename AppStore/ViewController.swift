@@ -55,8 +55,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             }
                     }
                 }
-                print("데이터 다운 :", self.listArray.count, "개")
+                
                 DispatchQueue.main.async {
+                    print("데이터 다운 :", self.listArray.count, "개\n")
                     UIApplication.shared.isNetworkActivityIndicatorVisible = false
                     self.downloadAppImage()
                 }
@@ -65,7 +66,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func downloadAppImage() {
-        print("이미지 다운로드")
+        print("이미지 \(listArray.count)개 다운로드 시작")
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         for i in 0..<(listArray.count) {
             let item = self.listArray[i] as! NSDictionary
@@ -83,7 +84,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                                 UIApplication.shared.isNetworkActivityIndicatorVisible = false
                                 self.Indicator.stopAnimating()
                                 self.Indicator.isHidden = true
-                                print("앱 아이콘 다운로드\(self.listArray.count)개 완료")
+                                print("앱 아이콘 \(self.listArray.count)개 다운로드 완료\n")
                                 self.ListTableView.delegate = self
                                 self.ListTableView.dataSource = self
                                 self.ListTableView.reloadData()
@@ -117,7 +118,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let image: UIImage = item["image"] as! UIImage
         cell.appImage.image = image
         cell.appImage.layer.cornerRadius = cell.appImage.frame.width/4
-        cell.appImage.layer.borderColor = UIColor.init(r: 0, g: 0, b: 2505, a: 0.3).cgColor
+        cell.appImage.layer.borderColor = UIColor.init(r: 0, g: 0, b: 255, a: 0.3).cgColor
         cell.appImage.layer.borderWidth = 1/UIScreen.main.scale
         
         //이름 + 카테고리 + 평점 (데이터 없음)
@@ -131,11 +132,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.buyButton.layer.borderWidth = 1.0
         
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath ) as! ListCell
-        cell.appImage.image = nil;
     }
     
    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
