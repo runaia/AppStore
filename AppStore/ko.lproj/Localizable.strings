@@ -1,0 +1,13 @@
+/*
+ Localizable.strings
+ AppStore
+ 
+ Created by seojiwon on 2017. 9. 20..
+ Copyright © 2017년 seojiwon. All rights reserved.
+ */
+"KO" = "한국어";
+"EN" = "영어";
+"JA" = "일본어";
+"KM" = "캄보디아어";
+"ZH" = "중국어(간체)";
+"MY" = "버마어";

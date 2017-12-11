@@ -1,0 +1,111 @@
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "2BF-3n-j1J"; */
+"2BF-3n-j1J.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "3wI-oF-pfT"; */
+"3wI-oF-pfT.text" = "Label";
+
+/* Class = "UISegmentedControl"; 5LF-bG-zwq.segmentTitles[0] = "세부사항"; ObjectID = "5LF-bG-zwq"; */
+"5LF-bG-zwq.segmentTitles[0]" = "세부사항";
+
+/* Class = "UISegmentedControl"; 5LF-bG-zwq.segmentTitles[1] = "리뷰"; ObjectID = "5LF-bG-zwq"; */
+"5LF-bG-zwq.segmentTitles[1]" = "리뷰";
+
+/* Class = "UISegmentedControl"; 5LF-bG-zwq.segmentTitles[2] = "관련 콘텐츠"; ObjectID = "5LF-bG-zwq"; */
+"5LF-bG-zwq.segmentTitles[2]" = "관련 콘텐츠";
+
+/* Class = "UILabel"; text = "버전"; ObjectID = "8rs-Wa-lU4"; */
+"8rs-Wa-lU4.text" = "버전";
+
+/* Class = "UILabel"; text = "설명"; ObjectID = "8tu-0E-qk7"; */
+"8tu-0E-qk7.text" = "설명";
+
+/* Class = "UILabel"; text = "name"; ObjectID = "A1P-ee-rKH"; */
+"A1P-ee-rKH.text" = "name";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "DN1-RO-Jmb"; */
+"DN1-RO-Jmb.text" = "Label";
+
+/* Class = "UILabel"; text = "4+"; ObjectID = "Hbj-a3-TDL"; */
+"Hbj-a3-TDL.text" = "4+";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "Lqv-xG-awD"; */
+"Lqv-xG-awD.text" = "Label";
+
+/* Class = "UILabel"; text = "등급"; ObjectID = "M5i-sh-Nw1"; */
+"M5i-sh-Nw1.text" = "등급";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "Mut-HA-Np9"; */
+"Mut-HA-Np9.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "PPo-Je-vPE"; */
+"PPo-Je-vPE.text" = "Label";
+
+/* Class = "UILabel"; text = "설명"; ObjectID = "QZj-NU-bwE"; */
+"QZj-NU-bwE.text" = "설명";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "QjB-9f-62c"; */
+"QjB-9f-62c.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "RRJ-g0-Eh9"; */
+"RRJ-g0-Eh9.text" = "Label";
+
+/* Class = "UILabel"; text = "정보"; ObjectID = "RhM-to-71b"; */
+"RhM-to-71b.text" = "정보";
+
+/* Class = "UILabel"; text = "name"; ObjectID = "Teq-Ye-dAM"; */
+"Teq-Ye-dAM.text" = "name";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "VO2-Pg-R1m"; */
+"VO2-Pg-R1m.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "WCt-Or-ucK"; */
+"WCt-Or-ucK.text" = "Label";
+
+/* Class = "UILabel"; text = "개발자"; ObjectID = "Wtg-fo-zGj"; */
+"Wtg-fo-zGj.text" = "개발자";
+
+/* Class = "UILabel"; text = "가족 공유"; ObjectID = "X3U-sN-Jrh"; */
+"X3U-sN-Jrh.text" = "가족 공유";
+
+/* Class = "UILabel"; text = "카테고리"; ObjectID = "bNL-VA-Fgv"; */
+"bNL-VA-Fgv.text" = "카테고리";
+
+/* Class = "UILabel"; text = "크기"; ObjectID = "cqI-O6-chm"; */
+"cqI-O6-chm.text" = "크기";
+
+/* Class = "UINavigationItem"; title = "금융"; ObjectID = "fJ7-mv-JXQ"; */
+"fJ7-mv-JXQ.title" = "금융";
+
+/* Class = "UILabel"; text = "호환성"; ObjectID = "hjD-2H-ZEw"; */
+"hjD-2H-ZEw.text" = "호환성";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "ldj-Yc-Ung"; */
+"ldj-Yc-Ung.text" = "Label";
+
+/* Class = "UIButton"; normalTitle = "받기"; ObjectID = "mea-gK-NJP"; */
+"mea-gK-NJP.normalTitle" = "받기";
+
+/* Class = "UIBarButtonItem"; title = "완료"; ObjectID = "npM-Ow-EFo"; */
+"npM-Ow-EFo.title" = "완료";
+
+/* Class = "UILabel"; text = "12"; ObjectID = "qk6-v7-MR5"; */
+"qk6-v7-MR5.text" = "12";
+
+/* Class = "UILabel"; text = "언어"; ObjectID = "r06-yl-CQl"; */
+"r06-yl-CQl.text" = "언어";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "rpR-Kx-uSq"; */
+"rpR-Kx-uSq.text" = "Label";
+
+/* Class = "UILabel"; text = "업데이트"; ObjectID = "ucc-3O-7R1"; */
+"ucc-3O-7R1.text" = "업데이트";
+
+/* Class = "UIButton"; normalTitle = "받기"; ObjectID = "vr6-b3-EyI"; */
+"vr6-b3-EyI.normalTitle" = "받기";
+
+/* Class = "UINavigationController"; title = "NavController"; ObjectID = "wI6-8k-UPv"; */
+"wI6-8k-UPv.title" = "NavController";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "xjf-nE-0Uz"; */
+"xjf-nE-0Uz.text" = "Label";
